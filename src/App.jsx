@@ -1,6 +1,6 @@
 import Navbar from "./components/Navbar";
 import Hero from "./components/Hero";
-import Services from "./components/Services";
+import services from "./components/Services";
 import Booking from "./components/Booking";
 import Branches from "./components/Branches";
 import WhyUs from "./components/whyUs";
