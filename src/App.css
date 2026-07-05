@@ -570,3 +570,69 @@ nav a:hover {
   width: 120px;
   margin-bottom: 15px;
 }
+.footer-col svg {
+  color: gold;
+  margin-right: 8px;
+  vertical-align: middle;
+}
+
+.footer-col a {
+  color: gold;
+  text-decoration: none;
+  display: block;
+  margin: 10px 0;
+}
+
+.footer-col a:hover {
+  color: white;
+}
+.price-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 25px;
+  max-width: 1150px;
+  margin: 0 auto;
+}
+
+.price-card {
+  background: #151515;
+  border: 1px solid rgba(212, 175, 55, 0.6);
+  border-radius: 14px;
+  padding: 30px;
+  transition: 0.3s;
+}
+
+.price-card:hover {
+  transform: translateY(-8px);
+  border-color: gold;
+}
+
+.price-card h3 {
+  color: gold;
+  margin-bottom: 25px;
+  font-size: 24px;
+}
+
+.price-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 14px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+.price-row span {
+  color: #ddd;
+  text-align: left;
+}
+
+.price-row strong {
+  color: gold;
+  white-space: nowrap;
+}
+
+@media (max-width: 900px) {
+  .price-grid {
+    grid-template-columns: 1fr;
+  }
+}
