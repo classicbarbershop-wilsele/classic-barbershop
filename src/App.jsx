@@ -1,9 +1,9 @@
 import Navbar from "./components/Navbar";
 import Hero from "./components/Hero";
-import services from "./components/Services";
+import services from "./components/services";
 import Booking from "./components/Booking";
 import Branches from "./components/Branches";
-import WhyUs from "./components/whyUs";
+import whyUs from "./components/whyUs";
 import Reviews from "./components/Reviews";
 import Footer from "./components/Footer";
 import Contact from "./components/Contact";
@@ -13,8 +13,8 @@ function App() {
     <>
   <Navbar />
 <Hero />
-<WhyUs />
-<Services />
+<whyUs />
+<services />
 <Reviews />
 <Booking />
 <Branches /> 
