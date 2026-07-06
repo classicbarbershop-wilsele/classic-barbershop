@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import services from "../data/services";
 import branches from "../data/branches";
 import { db } from "../firebase";
@@ -49,14 +50,17 @@ function getAvailableTimes(branchName, date, service, bookingsForDay) {
 
   return generateTimes(workingDay[0], workingDay[1], service.duration).filter(
     (time) =>
-      !bookingsForDay.some((booking) =>
-        booking.status !== "cancelled" &&
-        overlaps(time, service.duration, booking.time, booking.duration)
+      !bookingsForDay.some(
+        (booking) =>
+          booking.status !== "cancelled" &&
+          overlaps(time, service.duration, booking.time, booking.duration)
       )
   );
 }
 
 function Booking() {
+  const { t } = useTranslation();
+
   const [step, setStep] = useState(1);
   const [branch, setBranch] = useState("");
   const [category, setCategory] = useState("");
@@ -101,7 +105,7 @@ function Booking() {
     setErrorMessage("");
 
     if (!customer.name || !customer.phone || !customer.email || !customer.date || !customer.time) {
-      setErrorMessage("Vul alle gegevens in.");
+      setErrorMessage(t("booking.fillAll", "Vul alle gegevens in."));
       return;
     }
 
@@ -117,13 +121,16 @@ function Booking() {
       const snapshot = await getDocs(q);
       const existingBookings = snapshot.docs.map((doc) => doc.data());
 
-      const isTaken = existingBookings.some((booking) =>
-        booking.status !== "cancelled" &&
-        overlaps(customer.time, selectedService.duration, booking.time, booking.duration)
+      const isTaken = existingBookings.some(
+        (booking) =>
+          booking.status !== "cancelled" &&
+          overlaps(customer.time, selectedService.duration, booking.time, booking.duration)
       );
 
       if (isTaken) {
-        setErrorMessage("Dit tijdstip is net gereserveerd. Kies een ander tijdstip.");
+        setErrorMessage(
+          t("booking.timeTaken", "Dit tijdstip is net gereserveerd. Kies een ander tijdstip.")
+        );
         setBookingsForDay(existingBookings);
         return;
       }
@@ -142,7 +149,12 @@ function Booking() {
         createdAt: new Date(),
       });
 
-      setSuccessMessage("Uw afspraak is succesvol aangevraagd. Wij nemen zo snel mogelijk contact met u op.");
+      setSuccessMessage(
+        t(
+          "booking.success",
+          "Uw afspraak is succesvol aangevraagd. Wij nemen zo snel mogelijk contact met u op."
+        )
+      );
 
       setCustomer({
         name: "",
@@ -158,7 +170,7 @@ function Booking() {
       setCategory("");
       setSelectedService(null);
     } catch (error) {
-      setErrorMessage("Er ging iets mis. Probeer opnieuw.");
+      setErrorMessage(t("booking.error", "Er ging iets mis. Probeer opnieuw."));
     } finally {
       setIsSubmitting(false);
     }
@@ -166,14 +178,14 @@ function Booking() {
 
   return (
     <section className="booking" id="booking">
-      <h2>Maak een afspraak</h2>
+      <h2>{t("booking.title")}</h2>
 
       {successMessage && <p className="success-message">{successMessage}</p>}
       {errorMessage && <p className="error-message">{errorMessage}</p>}
 
       {step === 1 && (
         <>
-          <h3>Kies een vestiging</h3>
+          <h3>{t("booking.chooseBranch")}</h3>
           <div className="booking-options">
             {Object.keys(branches).map((branchName) => (
               <button
@@ -182,6 +194,16 @@ function Booking() {
                   setSuccessMessage("");
                   setErrorMessage("");
                   setBranch(branchName);
+                  setCategory("");
+                  setSelectedService(null);
+                  setBookingsForDay([]);
+                  setCustomer({
+                    name: "",
+                    phone: "",
+                    email: "",
+                    date: "",
+                    time: "",
+                  });
                   setStep(2);
                 }}
               >
@@ -194,7 +216,7 @@ function Booking() {
 
       {step === 2 && (
         <>
-          <h3>Kies een categorie</h3>
+          <h3>{t("booking.chooseCategory")}</h3>
           <div className="booking-options">
             {categories.map((cat) => (
               <button
@@ -210,14 +232,14 @@ function Booking() {
           </div>
 
           <button className="back-btn" onClick={() => setStep(1)}>
-            ← Terug
+            {t("booking.back")}
           </button>
         </>
       )}
 
       {step === 3 && (
         <>
-          <h3>Kies een dienst</h3>
+          <h3>{t("booking.chooseService")}</h3>
           <div className="services-list">
             {services[category]?.map((service) => (
               <div
@@ -225,6 +247,12 @@ function Booking() {
                 key={service.name}
                 onClick={() => {
                   setSelectedService(service);
+                  setBookingsForDay([]);
+                  setCustomer({
+                    ...customer,
+                    date: "",
+                    time: "",
+                  });
                   setStep(4);
                 }}
               >
@@ -238,47 +266,47 @@ function Booking() {
           </div>
 
           <button className="back-btn" onClick={() => setStep(2)}>
-            ← Terug
+            {t("booking.back")}
           </button>
         </>
       )}
 
       {step === 4 && selectedService && (
         <div className="booking-form">
-          <h3>Vul uw gegevens in</h3>
+          <h3>{t("booking.yourDetails")}</h3>
 
           <input
             type="text"
-            placeholder="Naam"
+            placeholder={t("booking.name", "Naam")}
             value={customer.name}
             onChange={(e) => setCustomer({ ...customer, name: e.target.value })}
           />
 
           <input
             type="tel"
-            placeholder="Telefoonnummer"
+            placeholder={t("booking.phone", "Telefoonnummer")}
             value={customer.phone}
             onChange={(e) => setCustomer({ ...customer, phone: e.target.value })}
           />
 
           <input
             type="email"
-            placeholder="E-mail"
+            placeholder={t("booking.email", "E-mail")}
             value={customer.email}
             onChange={(e) => setCustomer({ ...customer, email: e.target.value })}
           />
 
           <button className="back-btn" onClick={() => setStep(3)}>
-            ← Terug
+            {t("booking.back")}
           </button>
 
-          <button onClick={() => setStep(5)}>Volgende</button>
+          <button onClick={() => setStep(5)}>{t("booking.next")}</button>
         </div>
       )}
 
       {step === 5 && selectedService && (
         <div className="booking-form">
-          <h3>Kies datum en tijd</h3>
+          <h3>{t("booking.chooseDate")}</h3>
 
           <input
             type="date"
@@ -301,7 +329,7 @@ function Booking() {
             value={customer.time}
             onChange={(e) => setCustomer({ ...customer, time: e.target.value })}
           >
-            <option value="">Kies een tijd</option>
+            <option value="">{t("booking.chooseTime", "Kies een tijd")}</option>
             {times.map((time) => (
               <option key={time} value={time}>
                 {time}
@@ -310,24 +338,26 @@ function Booking() {
           </select>
 
           {customer.date && times.length === 0 && (
-            <p className="error-message">Geen beschikbare tijden op deze datum.</p>
+            <p className="error-message">
+              {t("booking.noTimes", "Geen beschikbare tijden op deze datum.")}
+            </p>
           )}
 
           <div className="booking-summary">
-            <h3>Overzicht</h3>
-            <p><strong>Vestiging:</strong> {branch}</p>
-            <p><strong>Dienst:</strong> {selectedService.name}</p>
-            <p><strong>Duur:</strong> {selectedService.duration} min</p>
-            <p><strong>Totaalprijs:</strong> €{bookingPrice.toFixed(2).replace(".", ",")}</p>
-            <p><strong>Naam:</strong> {customer.name}</p>
-            <p><strong>Telefoon:</strong> {customer.phone}</p>
-            <p><strong>E-mail:</strong> {customer.email}</p>
-            <p><strong>Datum:</strong> {customer.date}</p>
-            <p><strong>Tijd:</strong> {customer.time}</p>
+            <h3>{t("booking.overview")}</h3>
+            <p><strong>{t("booking.branch", "Vestiging")}:</strong> {branch}</p>
+            <p><strong>{t("booking.service", "Dienst")}:</strong> {selectedService.name}</p>
+            <p><strong>{t("booking.duration", "Duur")}:</strong> {selectedService.duration} min</p>
+            <p><strong>{t("booking.totalPrice", "Totaalprijs")}:</strong> €{bookingPrice.toFixed(2).replace(".", ",")}</p>
+            <p><strong>{t("booking.name", "Naam")}:</strong> {customer.name}</p>
+            <p><strong>{t("booking.phone", "Telefoon")}:</strong> {customer.phone}</p>
+            <p><strong>{t("booking.email", "E-mail")}:</strong> {customer.email}</p>
+            <p><strong>{t("booking.date", "Datum")}:</strong> {customer.date}</p>
+            <p><strong>{t("booking.time", "Tijd")}:</strong> {customer.time}</p>
           </div>
 
           <button className="back-btn" onClick={() => setStep(4)}>
-            ← Terug
+            {t("booking.back")}
           </button>
 
           <button
@@ -341,7 +371,7 @@ function Booking() {
             }
             onClick={submitBooking}
           >
-            {isSubmitting ? "Bezig met reserveren..." : "Afspraak bevestigen"}
+            {isSubmitting ? t("booking.booking") : t("booking.confirm")}
           </button>
         </div>
       )}

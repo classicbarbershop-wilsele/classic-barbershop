@@ -1,24 +1,33 @@
+import { useTranslation } from "react-i18next";
+
 function Hero() {
+  const { t } = useTranslation();
+
   return (
     <section className="hero" id="home">
       <div className="hero-overlay">
-        <span className="hero-small-title">Welkom bij</span>
+        <span className="hero-small-title">
+          {t("hero.welcome")}
+        </span>
 
-        <h1>
-          Classic <br />
-          Barbershop
-        </h1>
+        <h1>{t("hero.title")}</h1>
 
-        <p>
-          Professionele kapsels, baardverzorging en premium service in Haacht
-          en Wilsele.
-        </p>
+        <p>{t("hero.text")}</p>
 
         <div className="hero-buttons">
-          <a href="#booking" className="hero-btn">Maak een afspraak</a>
-         <a href="#branches" className="hero-btn-outline">
-  Onze vestigingen
-</a>
+          <a href="#booking" className="hero-btn">
+            {t("hero.appointment")}
+          </a>
+
+          <a href="#services" className="hero-btn-outline">
+            {t("hero.prices")}
+          </a>
+        </div>
+
+        <div className="hero-features">
+          <div>{t("hero.google")}</div>
+          <div>{t("hero.barbers")}</div>
+          <div>{t("hero.locations")}</div>
         </div>
       </div>
     </section>

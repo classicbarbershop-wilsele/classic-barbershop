@@ -1,41 +1,60 @@
+import { useTranslation } from "react-i18next";
+
 function WhyUs() {
+  const { t } = useTranslation();
+
+  const features = [
+    {
+      icon: "💈",
+      title: t("whyUs.professionalTitle"),
+      text: t("whyUs.professionalText"),
+    },
+    {
+      icon: "⭐",
+      title: t("whyUs.premiumTitle"),
+      text: t("whyUs.premiumText"),
+    },
+    {
+      icon: "📍",
+      title: t("whyUs.branchesTitle"),
+      text: t("whyUs.branchesText"),
+    },
+    {
+      icon: "⏰",
+      title: t("whyUs.hoursTitle"),
+      text: t("whyUs.hoursText"),
+    },
+    {
+      icon: "📅",
+      title: t("whyUs.onlineTitle"),
+      text: t("whyUs.onlineText"),
+    },
+    {
+      icon: "💎",
+      title: t("whyUs.qualityTitle"),
+      text: t("whyUs.qualityText"),
+    },
+  ];
+
   return (
     <section className="why-us">
+      <h2>{t("whyUs.title")}</h2>
 
-      <h2>Waarom kiezen voor Classic Barbershop?</h2>
+      <p className="why-subtitle">
+        {t("whyUs.subtitle")}
+      </p>
 
       <div className="why-grid">
+        {features.map((feature) => (
+          <div className="why-card" key={feature.title}>
+            <h3>
+              {feature.icon} {feature.title}
+            </h3>
 
-        <div className="why-card">
-          <h3>💈 Professionele Barbiers</h3>
-          <p>
-            Ervaren kappers met oog voor detail en kwaliteit.
-          </p>
-        </div>
-
-        <div className="why-card">
-          <h3>⭐ Premium Service</h3>
-          <p>
-            Hoogwaardige verzorging in een moderne en ontspannen sfeer.
-          </p>
-        </div>
-
-        <div className="why-card">
-          <h3>📍 Twee Vestigingen</h3>
-          <p>
-            Bezoek ons in Haacht of Wilsele wanneer het jou uitkomt.
-          </p>
-        </div>
-
-        <div className="why-card">
-          <h3>⏰ Flexibele Openingstijden</h3>
-          <p>
-            Ook in het weekend geopend voor jouw gemak.
-          </p>
-        </div>
-
+            <p>{feature.text}</p>
+          </div>
+        ))}
       </div>
-
     </section>
   );
 }

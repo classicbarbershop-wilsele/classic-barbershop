@@ -812,3 +812,146 @@ button:disabled {
   cursor: not-allowed;
   transform: none;
 }
+.hero-features {
+  display: flex;
+  gap: 15px;
+  flex-wrap: wrap;
+  margin-top: 30px;
+}
+
+.hero-features div {
+  background: rgba(0, 0, 0, 0.55);
+  border: 1px solid rgba(212, 175, 55, 0.5);
+  color: white;
+  padding: 10px 15px;
+  border-radius: 30px;
+  font-weight: bold;
+  font-size: 14px;
+}
+
+.why-subtitle,
+.services-subtitle,
+.branches-subtitle,
+.reviews-subtitle {
+  max-width: 750px;
+  margin: -25px auto 40px;
+  color: #ccc;
+  font-size: 18px;
+  line-height: 1.7;
+}
+
+.services-note {
+  color: #d4af37;
+  margin-top: 30px;
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.price-row small {
+  color: #aaa;
+  font-size: 13px;
+  white-space: nowrap;
+}
+
+.branch-buttons {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-top: 20px;
+}
+
+.branch-buttons a {
+  text-decoration: none;
+  margin-top: 0;
+}
+
+.branch-social {
+  display: flex;
+  gap: 15px;
+  margin-top: 20px;
+}
+
+.branch-social a {
+  color: gold;
+  font-size: 24px;
+}
+
+.footer-bottom {
+  grid-column: 1 / -1;
+  border-top: 1px solid rgba(212, 175, 55, 0.3);
+  margin-top: 30px;
+  padding-top: 20px;
+  text-align: center;
+}
+
+.footer-bottom p {
+  font-size: 15px;
+  color: #aaa;
+}
+
+@media (max-width: 900px) {
+  .hero-features {
+    justify-content: center;
+  }
+
+  .hero-features div {
+    width: 100%;
+    text-align: center;
+  }
+
+  .branch-buttons {
+    flex-direction: column;
+  }
+
+  .branch-buttons a {
+    width: 100%;
+    text-align: center;
+  }
+}
+.navbar-right {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.language-select {
+  background: #1b1b1b;
+  color: white;
+  border: 1px solid gold;
+  border-radius: 8px;
+  padding: 8px 10px;
+  cursor: pointer;
+}
+
+.language-select:focus {
+  outline: none;
+  border-color: #d4af37;
+}
+
+@media (max-width: 900px) {
+  .navbar-right {
+    width: 100%;
+    flex-direction: column;
+    margin-top: 15px;
+  }
+
+  .language-select {
+    width: 100%;
+  }
+}
+html[dir="rtl"] {
+  direction: rtl;
+}
+
+html[dir="rtl"] body {
+  text-align: right;
+}
+
+html[dir="rtl"] .hero-buttons,
+html[dir="rtl"] .booking-options,
+html[dir="rtl"] .price-row,
+html[dir="rtl"] .booking-summary,
+html[dir="rtl"] .footer,
+html[dir="rtl"] .nav-links {
+  direction: rtl;
+}

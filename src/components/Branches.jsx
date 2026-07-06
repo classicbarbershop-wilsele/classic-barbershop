@@ -1,32 +1,81 @@
+import { useTranslation } from "react-i18next";
+import {
+  FaPhoneAlt,
+  FaMapMarkerAlt,
+  FaClock,
+  FaInstagram,
+  FaFacebook,
+} from "react-icons/fa";
+
+import branches from "../data/branches";
+
 function Branches() {
+  const { t } = useTranslation();
+
   return (
-   <section className="branches" id="branches">
-      <h2>Onze Vestigingen</h2>
+    <section className="branches" id="branches">
+      <h2>{t("branches.title")}</h2>
+
+      <p className="branches-subtitle">{t("branches.subtitle")}</p>
+
       <div className="branches-grid">
+        {Object.values(branches).map((branch) => (
+          <div className="branch-card" key={branch.id}>
+            <h3>{branch.name}</h3>
 
-      <div className="branch-card">
-        <h3>Classic Barbershop - Haacht</h3>
-        <p>Vekestraat 1, 3150 Haacht</p>
-        <p>Tel: 0470 51 39 16</p>
-        <p>Dinsdag - vrijdag: 09:00 - 19:00</p>
-        <p>Zaterdag - maandag: 09:00 - 18:00</p>
+            <p>
+              <FaMapMarkerAlt /> {branch.address}
+            </p>
 
-        <a href="https://maps.app.goo.gl/KP83XtzVL5pKkiDQA" target="_blank">
-          Bekijk op Google Maps
-        </a>
-      </div>
+            <p>
+              <FaPhoneAlt /> {branch.phone}
+            </p>
 
-      <div className="branch-card">
-        <h3>Classic Barbershop - Wilsele</h3>
-        <p>Aarschotsesteenweg 664, 3012 Wilsele</p>
-        <p>Tel: 0492 86 04 37</p>
-        <p>Maandag - vrijdag: 10:00 - 19:00</p>
-        <p>Zaterdag - zondag: 10:00 - 18:00</p>
+            <p>
+              <FaClock /> {branch.openingText}
+            </p>
 
-        <a href="https://maps.app.goo.gl/obsEbNireDGvQCBF6" target="_blank">
-          Bekijk op Google Maps
-        </a>
-       </div>
+            <div className="branch-buttons">
+              <a
+                href={branch.maps}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hero-btn"
+              >
+                📍 {t("branches.maps")}
+              </a>
+
+              <a
+                href={`tel:${branch.phone.replace(/\s/g, "")}`}
+                className="hero-btn-outline"
+              >
+                📞 {t("branches.call")}
+              </a>
+            </div>
+
+            <div className="branch-social">
+              {branch.instagram && (
+                <a
+                  href={branch.instagram}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <FaInstagram />
+                </a>
+              )}
+
+              {branch.facebook && (
+                <a
+                  href={branch.facebook}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <FaFacebook />
+                </a>
+              )}
+            </div>
+          </div>
+        ))}
       </div>
     </section>
   );

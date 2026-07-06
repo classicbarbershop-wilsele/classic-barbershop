@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { db } from "../firebase";
 import {
   collection,
@@ -11,6 +12,8 @@ import {
 } from "firebase/firestore";
 
 function Admin() {
+  const { t } = useTranslation();
+
   const [bookings, setBookings] = useState([]);
   const [password, setPassword] = useState("");
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -46,22 +49,31 @@ function Admin() {
   }
 
   async function deleteBooking(id) {
-    const confirmDelete = window.confirm("Weet je zeker dat je deze afspraak wilt verwijderen?");
+    const confirmDelete = window.confirm(
+      t("admin.deleteConfirm", "Weet je zeker dat je deze afspraak wilt verwijderen?")
+    );
+
     if (!confirmDelete) return;
 
     await deleteDoc(doc(db, "bookings", id));
     setBookings(bookings.filter((booking) => booking.id !== id));
   }
 
+  function statusLabel(status) {
+    if (status === "confirmed") return t("admin.confirmed", "Confirmed");
+    if (status === "cancelled") return t("admin.cancelled", "Cancelled");
+    return t("admin.pending", "Pending");
+  }
+
   if (!isLoggedIn) {
     return (
       <section className="booking">
-        <h2>Admin Login</h2>
+        <h2>{t("admin.login")}</h2>
 
         <div className="booking-form">
           <input
             type="password"
-            placeholder="Wachtwoord"
+            placeholder={t("admin.password", "Wachtwoord")}
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
@@ -70,12 +82,13 @@ function Admin() {
             onClick={() => {
               if (password === "classic-barbershop") {
                 setIsLoggedIn(true);
+                setPassword("");
               } else {
-                alert("Verkeerd wachtwoord");
+                alert(t("admin.wrongPassword", "Verkeerd wachtwoord"));
               }
             }}
           >
-            Inloggen
+            {t("admin.signIn", "Inloggen")}
           </button>
         </div>
       </section>
@@ -90,12 +103,11 @@ function Admin() {
   const cancelledBookings = bookings.filter((booking) => booking.status === "cancelled").length;
 
   const todayRevenue = bookings
-    .filter((booking) => booking.date === today && booking.status !== "cancelled")
+    .filter((booking) => booking.date === today && booking.status === "confirmed")
     .reduce((total, booking) => total + Number(booking.price || 0), 0);
 
   const filteredBookings = bookings.filter((booking) => {
-    const text =
-      `${booking.name} ${booking.phone} ${booking.email} ${booking.branch} ${booking.service}`.toLowerCase();
+    const text = `${booking.name} ${booking.phone} ${booking.email} ${booking.branch} ${booking.service}`.toLowerCase();
 
     const matchesSearch = text.includes(search.toLowerCase());
     const matchesStatus = statusFilter === "all" || booking.status === statusFilter;
@@ -107,44 +119,56 @@ function Admin() {
 
   return (
     <section className="booking">
-      <h2>Admin - Afspraken</h2>
+      <h2>{t("admin.title", "Admin - Afspraken")}</h2>
+
+      <button
+        className="back-btn"
+        onClick={() => {
+          setIsLoggedIn(false);
+          setPassword("");
+        }}
+      >
+        {t("admin.logout", "Uitloggen")}
+      </button>
 
       <div className="admin-stats">
         <div>
           <h3>{todayBookings}</h3>
-          <p>Vandaag</p>
+          <p>{t("admin.today", "Vandaag")}</p>
         </div>
 
         <div>
           <h3>{pendingBookings}</h3>
-          <p>Pending</p>
+          <p>{t("admin.pending", "Pending")}</p>
         </div>
 
         <div>
           <h3>{confirmedBookings}</h3>
-          <p>Confirmed</p>
+          <p>{t("admin.confirmed", "Confirmed")}</p>
         </div>
 
         <div>
           <h3>{cancelledBookings}</h3>
-          <p>Cancelled</p>
+          <p>{t("admin.cancelled", "Cancelled")}</p>
         </div>
 
         <div>
           <h3>€{todayRevenue}</h3>
-          <p>Omzet vandaag</p>
+          <p>{t("admin.todayRevenue", "Omzet vandaag")}</p>
         </div>
       </div>
 
       <div className="admin-filters">
-        <button onClick={() => setStatusFilter("all")}>All</button>
-        <button onClick={() => setStatusFilter("pending")}>Pending</button>
-        <button onClick={() => setStatusFilter("confirmed")}>Confirmed</button>
-        <button onClick={() => setStatusFilter("cancelled")}>Cancelled</button>
+        <button onClick={() => setStatusFilter("all")}>{t("admin.all", "All")}</button>
+        <button onClick={() => setStatusFilter("pending")}>{t("admin.pending", "Pending")}</button>
+        <button onClick={() => setStatusFilter("confirmed")}>{t("admin.confirmed", "Confirmed")}</button>
+        <button onClick={() => setStatusFilter("cancelled")}>{t("admin.cancelled", "Cancelled")}</button>
       </div>
 
       <div className="admin-filters">
-        <button onClick={() => setBranchFilter("all")}>Alle vestigingen</button>
+        <button onClick={() => setBranchFilter("all")}>
+          {t("admin.allBranches", "Alle vestigingen")}
+        </button>
         <button onClick={() => setBranchFilter("Haacht")}>Haacht</button>
         <button onClick={() => setBranchFilter("Wilsele")}>Wilsele</button>
       </div>
@@ -157,50 +181,55 @@ function Admin() {
       />
 
       <button className="back-btn" onClick={() => setDateFilter("")}>
-        Alle datums
+        {t("admin.allDates", "Alle datums")}
       </button>
 
       <input
         className="admin-search"
         type="text"
-        placeholder="Zoek op naam, telefoon, e-mail, vestiging..."
+        placeholder={t("admin.searchPlaceholder", "Zoek op naam, telefoon, e-mail, vestiging...")}
         value={search}
         onChange={(e) => setSearch(e.target.value)}
       />
 
+      <p>
+        {filteredBookings.length}{" "}
+        {t("admin.found", "afspraak/afspraken gevonden.")}
+      </p>
+
       {filteredBookings.length === 0 && (
-        <p>Geen afspraken gevonden.</p>
+        <p>{t("admin.noBookings", "Geen afspraken gevonden.")}</p>
       )}
 
       {filteredBookings.map((booking) => (
         <div className="booking-summary" key={booking.id}>
-          <p><strong>Vestiging:</strong> {booking.branch}</p>
-          <p><strong>Dienst:</strong> {booking.service}</p>
-          <p><strong>Prijs:</strong> €{booking.price}</p>
-          <p><strong>Naam:</strong> {booking.name}</p>
-          <p><strong>Telefoon:</strong> {booking.phone}</p>
-          <p><strong>E-mail:</strong> {booking.email}</p>
-          <p><strong>Datum:</strong> {booking.date}</p>
-          <p><strong>Tijd:</strong> {booking.time}</p>
+          <p><strong>{t("admin.branch", "Vestiging")}:</strong> {booking.branch}</p>
+          <p><strong>{t("admin.service", "Dienst")}:</strong> {booking.service}</p>
+          <p><strong>{t("admin.price", "Prijs")}:</strong> €{booking.price}</p>
+          <p><strong>{t("admin.name", "Naam")}:</strong> {booking.name}</p>
+          <p><strong>{t("admin.phone", "Telefoon")}:</strong> {booking.phone}</p>
+          <p><strong>{t("admin.email", "E-mail")}:</strong> {booking.email}</p>
+          <p><strong>{t("admin.date", "Datum")}:</strong> {booking.date}</p>
+          <p><strong>{t("admin.time", "Tijd")}:</strong> {booking.time}</p>
 
           <p>
-            <strong>Status:</strong>{" "}
+            <strong>{t("admin.status", "Status")}:</strong>{" "}
             <span className={`status-badge ${booking.status}`}>
-              {booking.status}
+              {statusLabel(booking.status)}
             </span>
           </p>
 
           <div className="admin-actions">
             <button onClick={() => updateStatus(booking.id, "confirmed")}>
-              ✅ Bevestigen
+              ✅ {t("admin.confirm", "Bevestigen")}
             </button>
 
             <button onClick={() => updateStatus(booking.id, "cancelled")}>
-              ❌ Annuleren
+              ❌ {t("admin.cancel", "Annuleren")}
             </button>
 
             <button onClick={() => deleteBooking(booking.id)}>
-              🗑️ Verwijderen
+              🗑️ {t("admin.delete", "Verwijderen")}
             </button>
           </div>
         </div>

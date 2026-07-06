@@ -1,55 +1,87 @@
 const services = {
   heren: [
     {
-      name: "Heren knippen",
+      id: "heren-knippen",
+      name: "Knippen",
+      description: "Modern of klassiek kapsel inclusief styling.",
+      price: 20,
+      duration: 25,
+    },
+    {
+      id: "wassen-knippen",
+      name: "Wassen & Knippen",
+      description: "Knippen inclusief wassen.",
       price: 25,
       duration: 30,
     },
     {
-      name: "Baard trimmen",
+      id: "baard-haar",
+      name: "Baard & Haar",
+      description: "Complete behandeling voor haar en baard.",
+      price: 35,
+      duration: 40,
+    },
+    {
+      id: "baard-scheren-aflijnen",
+      name: "Baard scheren met/of aflijnen",
+      description: "Baard scheren, trimmen of strak aflijnen.",
       price: 20,
-      duration: 20,
+      duration: 25,
     },
     {
-      name: "Haar & Baard",
-      price: 40,
-      duration: 45,
-    },
-    {
-      name: "VIP Service",
-      price: 55,
-      duration: 60,
+      id: "bruid-vip",
+      name: "Bruid VIP",
+      description: "Premium VIP behandeling.",
+      price: 50,
+      duration: 55,
     },
   ],
 
   kinderen: [
     {
-      name: "Klassiek knippen",
+      id: "jongens",
+      name: "Jongens",
+      description: "Kinderkapsel voor jongens onder 10 jaar.",
+      price: 15,
+      duration: 20,
+    },
+    {
+      id: "fade-kinderen",
+      name: "Fade",
+      description: "Professionele fade voor kinderen.",
       price: 20,
       duration: 25,
     },
     {
-      name: "Fade vanaf nul",
-      price: 25,
-      duration: 30,
+      id: "meisjes",
+      name: "Meisjes",
+      description: "Kinderkapsel voor meisjes onder 10 jaar.",
+      price: 20,
+      duration: 25,
     },
   ],
 
   dames: [
     {
-      name: "Dames knippen",
+      id: "dames-knippen",
+      name: "Knippen",
+      description: "Professioneel dameskapsel.",
+      price: 25,
+      duration: 30,
+    },
+    {
+      id: "wassen-handdoeken",
+      name: "Wassen & Handdoeken",
+      description: "Wassen en verzorgen.",
+      price: 15,
+      duration: 20,
+    },
+    {
+      id: "wassen-knippen-handdoeken",
+      name: "Wassen knippen & Handdoeken",
+      description: "Volledige behandeling inclusief wassen en knippen.",
       price: 30,
       duration: 35,
-    },
-    {
-      name: "Knippen, wassen & drogen",
-      price: 40,
-      duration: 50,
-    },
-    {
-      name: "Wassen & drogen",
-      price: 20,
-      duration: 25,
     },
   ],
 };
